@@ -1,0 +1,178 @@
+@import "../../node_modules/ol/ol.css";
+@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "sidepanel.css";
+@import "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+
+:root {
+  --pop-up-width: 20rem;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#map {
+  position: relative;
+  top: 0rem;
+  bottom: 0rem;
+  height: 100%;
+  width: 100%;
+}
+
+#screen {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.fullscreen:-webkit-full-screen {
+  height: 100%;
+  margin: 0;
+}
+
+.fullscreen:fullscreen {
+  height: 100%;
+}
+
+#logo {
+  width: 3rem;
+}
+
+#heading {
+  display: flex;
+}
+
+#website-name {
+  font-size: 1rem;
+}
+
+.ol-popup {
+  font-size: 0.9rem;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: calc(-1 * (var(--pop-up-width) / 2));
+  min-width: var(--pop-up-width);
+}
+
+.pop-info {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.ol-popup:after,
+.ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.ol-popup:after {
+  border-top-color: white;
+  border-width: 10px;
+  left: calc(var(--pop-up-width) / 2);
+  margin-left: -10px;
+}
+.ol-popup:before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: calc(var(--pop-up-width) / 2);
+  margin-left: -11px;
+}
+.ol-popup-closer {
+  text-decoration: none;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+}
+.ol-popup-closer:after {
+  content: "✖";
+}
+
+#popup-barplt {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.9rem;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+  z-index: 9;
+}
+
+.plt-img {
+  border: 0px solid black;
+  max-width: 90%;
+  display: block; /* Ensure it's treated as a block-level element */
+  margin: 0 auto;
+}
+
+.legend {
+  min-height: 2.5rem;
+  min-width: 15rem;
+  margin: 1rem, 1rem, 1rem, 1rem;
+}
+
+.ol-attribution:not(.ol-collapsed) {
+  background: None;
+  position: fixed;
+}
+
+.ol-attribution > ul {
+  transform: rotate(180deg);
+}
+
+.ol-attribution > ul > li > * {
+  transform: rotate(-180deg);
+}
+
+.ani-date-display {
+  font-size: 1rem;
+  background-color: rgb(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.download {
+  top: 65px;
+  left: 0.5em;
+}
+
+.ol-control button {
+  width: 1.6em;
+  height: 1.6em;
+  box-shadow: 0px 0px 2px 2px rgb(0, 0, 0, 0.2);
+}
+
+.ol-full-screen {
+  top: 3rem;
+}
+
+.ol-mouse-position {
+  border: solid 0.1px black;
+  background-color: rgba(135, 201, 239, 0.764);
+  box-shadow: 0px 0px 2px 2px rgb(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  min-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
