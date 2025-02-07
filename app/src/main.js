@@ -13,19 +13,13 @@ import * as Constants from "./Constants.js";
 import * as ProductLayers from "./ProductLayers.js";
 import { createXYDirString, fillStringTemplate } from "./util.js";
 import { initAnimationService } from "./Animation.js";
+import OLCesium from "olcs";
 
 const currProj = "ESPG:4326";
-const extent = [-180, -110, 180, 110];
-const containerInfo = document.getElementById("popup");
-const contentInfo = document.getElementById("popup-content");
-const closerInfo = document.getElementById("popup-closer");
-const containerPlt = document.getElementById("popup-barplt");
-const contentPlt = document.getElementById("popup-content-barplt");
-const closerPlt = document.getElementById("popup-closer-barplt");
-closerPlt.onclick = () => {
-  containerPlt.style.display = "none";
-};
-
+const extent = [-180, -125, 180, 125];
+const container = document.getElementById("popup");
+const content = document.getElementById("popup-content");
+const closer = document.getElementById("popup-closer");
 const view = new View({
   projection: "EPSG:4326",
   extent: extent,
@@ -33,9 +27,8 @@ const view = new View({
   zoom: 2,
   maxZoom: 8,
 });
-
-const overlayInfo = new Overlay({
-  element: containerInfo,
+const overlay = new Overlay({
+  element: container,
   autoPan: {
     animation: {
       duration: 250,
@@ -48,20 +41,22 @@ let newAttribution = new Attribution({
   collapsible: false,
   collapsed: false,
 });
+let intervalID = 0;
+let animateIndex = 1;
 
 function main() {
   map = new Map({
-    overlays: [overlayInfo],
+    overlays: [overlay],
     controls: init_controls(),
     target: "map",
     view: view,
   });
   map.setLayers(ProductLayers.initLayers());
+  const ol3d = new OLCesium({ map: map });
   ProductLayers.regLayerChanges(map);
   changeContinentSelectMode();
   registerMapHandlers();
-  ProductLayers.registerOverlayHandlers(onDisplayPlt);
-  registerViewHandlers(map);
+  registerViewHandlers(map, ol3d);
   initAnimationService(map);
 }
 
@@ -84,11 +79,6 @@ function init_controls() {
   return control;
 }
 
-function onDisplayPlt(posUrl, negUrl) {
-  contentPlt.innerHTML = `<img class="plt-img" src="${posUrl}"></img> <img class="plt-img" src="${negUrl}"></img>`;
-  containerPlt.style.display = "block";
-}
-
 function registerMapHandlers() {
   map.on("singleclick", function (evt) {
     let feature = map.forEachFeatureAtPixel(
@@ -99,6 +89,8 @@ function registerMapHandlers() {
     );
 
     if (feature) {
+      //update for dynamic showing - use feature.getKeys() to get names
+      // dynamically show the stuf next time
       let information = '<p class="pop-info">';
       Object.keys(feature.getProperties()).forEach((key, i) => {
         if (!Constants.NON_PROPERTIES.has(key)) {
@@ -108,16 +100,16 @@ function registerMapHandlers() {
         }
       });
       information += "</p>";
-      contentInfo.innerHTML = information;
-      overlayInfo.setPosition(evt.coordinate);
+      content.innerHTML = information;
+      overlay.setPosition(evt.coordinate);
     } else {
-      overlayInfo.setPosition(undefined);
+      overlay.setPosition(undefined);
     }
   });
 
-  closerInfo.onclick = function () {
-    overlayInfo.setPosition(undefined);
-    closerInfo.blur();
+  closer.onclick = function () {
+    overlay.setPosition(undefined);
+    closer.blur();
     return false;
   };
 }
@@ -126,7 +118,7 @@ function changeContinentSelectMode() {
   document.querySelector(Constants.SELECTORS.CONTINENTS).regularSelectMode();
 }
 
-function registerViewHandlers() {
+function registerViewHandlers(map, ol3d) {
   document
     .querySelector(Constants.SELECTORS.CONTINENTS)
     .addEventListener("change", (event) => {
@@ -136,6 +128,14 @@ function registerViewHandlers() {
       view.setCenter(newCenter);
       view.setZoom(newZoom);
     });
+
+  document
+    .querySelector(Constants.SELECTORS.VIEW_3D)
+    .addEventListener("change", (event) => {
+      ol3d.setEnabled(event.target.checked);
+    });
+  const e = new Event("change");
+  document.querySelector(Constants.SELECTORS.VIEW_3D).dispatchEvent(e);
 }
 
 window.onload = main;

@@ -8,6 +8,7 @@ import Static from "ol/source/ImageStatic.js";
 import { Fill, Stroke, Style } from "ol/style.js";
 import { getLayersAtDate, registerLayerHandlers } from "./ProductLayers.js";
 import { Control, defaults as defaultControls } from "ol/control.js";
+import DateCustom from "./CustomComponents/DateCustom.js";
 
 class AnimationService {
   static #ANIMATION_MAP_LAYER = 4;
@@ -58,13 +59,6 @@ class AnimationService {
     this.#dateIndex = 0;
     this.#mapLayers = map.getLayers();
 
-    this.#updateDates();
-    this.#updateProductAnimationLayer();
-    registerLayerHandlers(
-      this.#mapLayers.getArray(),
-      AnimationService.#ANIMATION_MAP_LAYER,
-      false
-    );
     this.#animationDateRange.addEventListener(
       "change",
       this.#updateDates.bind(this)
@@ -74,6 +68,13 @@ class AnimationService {
       function () {
         this.#updateVisbility();
       }.bind(this)
+    );
+    this.#animationDateRange.dispatchEvent(new Event("change"));
+    this.#updateProductAnimationLayer();
+    registerLayerHandlers(
+      this.#mapLayers.getArray(),
+      AnimationService.#ANIMATION_MAP_LAYER,
+      false
     );
     this.#registerAnimationHandler();
 
@@ -133,15 +134,10 @@ class AnimationService {
     clearInterval(this.#intervalID);
   }
 
-  #updateDates() {
-    this.#fromDate.setMaxDate(
-      this.#toDate.getMonthIndex(),
-      this.#toDate.getYear()
-    );
-    this.#toDate.setMinDate(
-      this.#fromDate.getMonthIndex(),
-      this.#fromDate.getYear()
-    );
+  #updateDates(event) {
+    event.stopPropagation();
+    this.#fromDate.setMaxDate(this.#toDate.getDate());
+    this.#toDate.setMinDate(this.#fromDate.getDate());
     this.#allDates = this.#constructDateArray();
     this.#updateProductAnimationLayer();
   }
@@ -153,32 +149,29 @@ class AnimationService {
   #constructDateArray() {
     this.#dateIndex = 0;
     let dates = [];
-    let currMonth = this.#fromDate.getMonthIndex();
-    let currYear = this.#fromDate.getYear();
-    let maxMonth = this.#toDate.getMonthIndex();
-    let maxYear = this.#toDate.getYear();
-    while (
-      currYear < maxYear ||
-      (currYear == maxYear && currMonth <= maxMonth)
-    ) {
-      let monthString = Constants.MONTHMAP[Constants.monthNames[currMonth]];
-      let yearString = String(currYear);
-      dates.push({ monthString: monthString, yearString: yearString });
-      currMonth += 1;
-      if (currMonth >= Constants.monthNames.length) {
-        currMonth = 0;
-        currYear += 1;
-      }
+    let toDate = this.#toDate.getDate();
+    let currDate = this.#fromDate.getDate();
+    toDate.setHours(0, 0, 0, 0);
+    currDate.setHours(0, 0, 0, 0);
+    while (currDate <= toDate) {
+      let monthString =
+        Constants.MONTHMAP[Constants.monthNames[currDate.getMonth()]];
+      let yearString = currDate.getFullYear();
+      let dayString = DateCustom.convertToDayString(currDate.getDate());
+      dates.push({
+        monthString: monthString,
+        yearString: yearString,
+        dayString: dayString,
+      });
+      currDate.setDate(currDate.getDate() + 1);
     }
-
+    console.log(dates);
     return dates;
   }
 
   #updateProductAnimationLayer() {
-    let yyyymm =
-      this.#allDates[this.#dateIndex].yearString +
-      this.#allDates[this.#dateIndex].monthString;
-    let layers = getLayersAtDate(yyyymm);
+    let yyyymmdd = this.#allDates[this.#dateIndex];
+    let layers = getLayersAtDate(yyyymmdd);
     layers.forEach((layer, index) => {
       this.#mapLayers.setAt(
         AnimationService.#ANIMATION_MAP_LAYER + index,
@@ -188,6 +181,8 @@ class AnimationService {
     let layerIndexToUpdate = this.#getTopLayerIndex();
     let date =
       this.#allDates[this.#dateIndex].monthString +
+      "/" +
+      this.#allDates[this.#dateIndex].dayString +
       "/" +
       this.#allDates[this.#dateIndex].yearString;
     let displayHTML = fillStringTemplate(AnimationService.#DATETEMPLATE, {

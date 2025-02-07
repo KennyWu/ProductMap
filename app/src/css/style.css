@@ -2,7 +2,6 @@
 @import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "sidepanel.css";
 @import "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
-
 :root {
   --pop-up-width: 20rem;
 }
@@ -96,29 +95,6 @@ body {
 }
 .ol-popup-closer:after {
   content: "✖";
-}
-
-#popup-barplt {
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.9rem;
-  background-color: white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #cccccc;
-  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
-  z-index: 9;
-}
-
-.plt-img {
-  border: 0px solid black;
-  max-width: 90%;
-  display: block; /* Ensure it's treated as a block-level element */
-  margin: 0 auto;
 }
 
 .legend {

@@ -1,15 +1,22 @@
 import { none } from "ol/centerconstraint";
 import { get } from "ol/proj";
+import * as Constants from "../Constants";
 
 class SelectCustom extends HTMLElement {
   #select;
-  #left;
-  #right;
+  #back;
+  #forward;
   #size;
+
+  static get observedAttributes() {
+    return [`mode`];
+  }
 
   constructor() {
     super();
-    this.innerHTML = `
+    let mode = this.getAttribute("mode") || "left-right";
+    if (mode === "left-right") {
+      this.innerHTML = `
         <style>
             btn-select {
                 font-size: 14px;
@@ -24,22 +31,75 @@ class SelectCustom extends HTMLElement {
         </style>
         <table>
             <tr>
-              <td><button type="button" class="btn btn-month btn-outline-secondary btn-sm btn-left">&lt;</button></td>
+              <td><button type="button" class="btn btn-month btn-outline-secondary btn-sm btn-back">&lt;</button></td>
               <td><select disabled class="form-control form-control-sm btn-select"></select></td>
-              <td><button type="button" class="btn btn-month btn-outline-secondary btn-sm btn-right">&gt;</button></td>
+              <td><button type="button" class="btn btn-month btn-outline-secondary btn-sm btn-forward">&gt;</button></td>
             </tr>
         </table>`;
+    }
 
+    if (mode === "top-down") {
+      this.innerHTML = `
+        <style>
+            btn-select {
+                font-size: 14px;
+            }
+            custom-selector button {
+              all: initial;
+              transition: border-color 0.3s ease;
+            }
+
+
+            custom-selector button:disabled {
+              border-top-color: gray;
+              border-bottom-color: gray;
+            }
+
+            custom-selector .btn-back {
+                width: 0; 
+                height: 0; 
+                border-left: 1rem solid transparent;
+                border-right: 1rem solid transparent; 
+                border-top: 1rem solid rgb(54, 69, 79);  
+            }
+
+            custom-selector .btn-forward {
+                width: 0; 
+                height: 0; 
+                border-left: 1rem solid transparent;
+                border-right: 1rem solid transparent; 
+                border-bottom: 1rem solid rgb(54, 69, 79);  
+            }
+
+            custom-selector td {
+              display: flex;
+              justify-content: center;
+              padding: 0px 0px 0px 0px;
+              margin: 1px
+            }
+        </style>
+        <table>
+            <tr>
+              <td><button type="button" class="btn-forward"></button></td>
+            </tr>
+            <tr>
+              <td><select disabled class="form-control form-control-sm btn-select"></select></td>
+            </tr>
+            <tr>
+              <td><button class="btn-back"></button></td>
+            </tr>
+        </table>`;
+    }
     this.#select = this.querySelector("select");
-    this.#left = this.querySelector(".btn-left");
-    this.#right = this.querySelector(".btn-right");
+    this.#back = this.querySelector(".btn-back");
+    this.#forward = this.querySelector(".btn-forward");
 
     this.#select.addEventListener("change", (event) => {
       event.stopPropagation();
       this.dispatchEvent(new Event("change"));
     });
-    this.#left.addEventListener("click", this.changeOption.bind(this));
-    this.#right.addEventListener("click", this.changeOption.bind(this));
+    this.#back.addEventListener("click", this.changeOption.bind(this));
+    this.#forward.addEventListener("click", this.changeOption.bind(this));
     this.#size = 0;
     // this.#select.value = currentOptions[0]
   }
@@ -59,9 +119,9 @@ class SelectCustom extends HTMLElement {
     let target = event.target;
     let eventLoop = null;
     let step = 0;
-    if (this.#left.className === target.className) {
+    if (this.#back.className === target.className) {
       step = -1;
-    } else if (this.#right.className === target.className) {
+    } else if (this.#forward.className === target.className) {
       step = 1;
     }
 
@@ -69,20 +129,16 @@ class SelectCustom extends HTMLElement {
     currIndex += step;
     if (currIndex < 0) {
       currIndex = this.#select.options.length - 1;
-      //Dispatch event that tells us loop occurs in what direction
-      eventLoop = new CustomEvent("Loop-begin-end");
     } else if (currIndex >= this.#select.options.length) {
       currIndex = 0;
-      //Dispatch event that tells us loop occurs in what direction
-      eventLoop = new CustomEvent("Loop-end-begin");
     }
 
     this.#select.selectedIndex = currIndex;
-    if (eventLoop != null) {
-      this.dispatchEvent(eventLoop);
+    if (step == 1) {
+      this.dispatchEvent(new CustomEvent(Constants.FORWARD));
+    } else {
+      this.dispatchEvent(new CustomEvent(Constants.BACKWARD));
     }
-
-    this.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   get size() {
@@ -101,31 +157,31 @@ class SelectCustom extends HTMLElement {
     return this.#select.value;
   }
 
-  disableRight() {
-    this.#right.disabled = true;
+  disableForward() {
+    this.#forward.disabled = true;
   }
 
-  enableRight() {
-    this.#right.disabled = false;
+  enableForward() {
+    this.#forward.disabled = false;
   }
 
-  disableLeft() {
-    this.#left.disabled = true;
+  disableBackward() {
+    this.#back.disabled = true;
   }
 
-  enableLeft() {
-    this.#left.disabled = false;
+  enableBackward() {
+    this.#back.disabled = false;
   }
 
   regularSelectMode() {
-    this.#left.style.display = "none";
-    this.#right.style.display = "none";
+    this.#back.style.display = "none";
+    this.#forward.style.display = "none";
     this.#select.disabled = false;
   }
 
   buttonSelectMode() {
-    this.#left.style.display = "block";
-    this.#right.style.display = "block";
+    this.#back.style.display = "block";
+    this.#forward.style.display = "block";
     this.#select.disabled = true;
   }
 }

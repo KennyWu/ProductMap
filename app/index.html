@@ -26,7 +26,15 @@
         </div>
         <div class="non-product-option">
           <h5 class="option-header">View</h5>
-          <custom-selector id="continents"></custom-selector>
+          <div id="view-container">
+            <custom-selector id="continents"></custom-selector>
+            <div class="form-check form-switch">
+              <label class="form-check-label" for="view-3d">Enable 3D</label>
+              <input class="form-check-input" type="checkbox" role="switch" id="view-3d">
+            </div>
+
+          </div>
+
         </div>
         <div class="non-product-option">
           <button class="btn-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#animation-layer">
@@ -66,9 +74,7 @@
               <div class="pl-dropdown">
                 <select class="form-control form-control-sm satellite"></select>
                 <select class="form-control form-control-sm day-night-selector"></select>
-                <select class="form-control form-control-sm border-selector"></select>
               </div>
-              <button type="button" class="btn btn-light btn-plot">Display Bar Plots</button>
               <label>
                 Opacity
                 <input type="range" class="form-range opacity" value="100" min="0" max="100" step="1" />
@@ -89,9 +95,7 @@
               <div class="pl-dropdown">
                 <select class="form-control form-control-sm satellite"></select>
                 <select class="form-control form-control-sm day-night-selector"></select>
-                <select class="form-control form-control-sm border-selector"></select>
               </div>
-              <button type="button" class="btn btn-light btn-plot">Display Bar Plots</button>
               <label>
                 Opacity
                 <input type="range" class="form-range opacity" value="100" min="0" max="100" step="1" class="opacity" />
@@ -112,9 +116,7 @@
               <div class="pl-dropdown">
                 <select class="form-control form-control-sm satellite"></select>
                 <select class="form-control form-control-sm day-night-selector"></select>
-                <select class="form-control form-control-sm border-selector"></select>
               </div>
-              <button type="button" class="btn btn-light btn-plot">Display Bar Plots</button>
               <label>
                 Opacity
                 <input type="range" class="form-range opacity" value="100" min="0" max="100" step="1" class="opacity" />
@@ -131,12 +133,9 @@
       <a href="#" id="popup-closer" class="ol-popup-closer"></a>
       <div id="popup-content"></div>
     </div>
-    <div id="popup-barplt">
-      <a href="#" id="popup-closer-barplt" class="ol-popup-closer"></a>
-      <div id="popup-content-barplt"></div>
-    </div>
   </div>
-  <script type="module" src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="./node_modules/cesium/Build/Cesium/Cesium.js" charset="UTF-8"></script>
   <script type="module" src="./src/InitializeOptions.js"></script>
   <script type="module" src="./src/main.js"></script>
 </body>

@@ -4,12 +4,15 @@ import * as Constants from "../Constants.js";
 let date = new Date();
 
 class DateCustom extends HTMLElement {
+  static #MONTHSELECT = ".month-select";
+  static #DAYSELECT = ".day-select";
+  static #YEARSELECT = ".year-select";
+  #currDate;
   #monthSelector;
   #yearSelector;
-  #maxMonth;
-  #maxYear;
-  #minMonth;
-  #minYear;
+  #daySelector;
+  #maxDate;
+  #minDate;
 
   constructor() {
     super();
@@ -24,7 +27,6 @@ class DateCustom extends HTMLElement {
             .date-custom input {
                 font-size: 12px;
             }
-
             
             .year-custom {
                 min-width: 2rem;
@@ -33,157 +35,252 @@ class DateCustom extends HTMLElement {
             }
             
         </style>
-        <div class='date-custom'> 
-        <custom-selector></custom-selector>
-        <input class='year-custom' type="number" step="1"/>
+        <div class='date-custom'>
+        <table>
+          <tr>
+            <td><custom-selector class='month-select' mode='top-down'></custom-selector></td>
+            <td><custom-selector class='day-select' mode='top-down'></custom-selector></td>
+            <td><custom-selector class='year-select' mode='top-down'></custom-selector></td>
+          </tr>
+        </table> 
         </div>
         `;
 
-    this.#monthSelector = this.querySelector("custom-selector");
-    this.#yearSelector = this.querySelector("input");
-    this.#maxMonth = new Date().getMonth();
-    this.#maxYear = new Date().getFullYear();
-    this.#maxMonth = this.#maxMonth == 0 ? 11 : this.#maxMonth - 1;
-    if (
-      this.#maxMonth == 11 &&
-      this.#yearSelector.value == this.#yearSelector.max
-    ) {
-      this.#maxYear = this.#maxYear - 1;
-    }
-    this.#minYear = Constants.MIN_YEAR_LOOKBACK;
-    this.#minMonth = 0;
+    this.#monthSelector = this.querySelector(DateCustom.#MONTHSELECT);
+    this.#daySelector = this.querySelector(DateCustom.#DAYSELECT);
+    this.#yearSelector = this.querySelector(DateCustom.#YEARSELECT);
+    this.#currDate = new Date();
+    this.#currDate.setDate(this.#currDate.getDate() - 1);
+    this.#maxDate = new Date(
+      this.#currDate.getFullYear(),
+      this.#currDate.getMonth(),
+      this.#currDate.getDate()
+    );
+
+    this.#minDate = new Date(Constants.MIN_YEAR_LOOKBACK, 0, 1);
     this.#initilizeOptions();
   }
 
   #initilizeOptions() {
-    let minYear = Constants.MIN_YEAR_LOOKBACK;
-    this.#yearSelector.min = minYear;
-    this.#yearSelector.max = this.#maxYear;
-    this.#yearSelector.value = this.#maxYear;
-    this.#yearSelector.addEventListener("change", this.#refillMonth.bind(this));
-    this.#yearSelector.dispatchEvent(new Event("change"));
-    //allows months to loop, say January 2024 we hit left and go to Decemeber 2023
+    this.#monthSelector.addOptions(Constants.monthNames);
+    this.#yearSelector.addOptions(Constants.VALID_YEARS_RANGE);
+    this.#daySelector.addOptions(Constants.VALID_DAY_RANGE);
+    this.#setDate(this.#currDate);
     this.#monthSelector.addEventListener(
-      "change",
-      function (event) {
-        this.#enableAndDisableSelectors();
-      }.bind(this)
+      Constants.FORWARD,
+      this.addMonth.bind(this)
     );
     this.#monthSelector.addEventListener(
-      Constants.LOOP_BEGIN_END_EVENT,
-      this.#subtractYear.bind(this)
+      Constants.BACKWARD,
+      this.subtractMonth.bind(this)
     );
-    this.#monthSelector.addEventListener(
-      Constants.LOOP_END_BEGIN_EVENT,
-      this.#addYear.bind(this)
+
+    this.#yearSelector.addEventListener(
+      Constants.FORWARD,
+      this.addYear.bind(this)
+    );
+    this.#yearSelector.addEventListener(
+      Constants.BACKWARD,
+      this.subtractYear.bind(this)
+    );
+
+    this.#daySelector.addEventListener(
+      Constants.FORWARD,
+      this.addDay.bind(this)
+    );
+    this.#daySelector.addEventListener(
+      Constants.BACKWARD,
+      this.subtractDay.bind(this)
     );
   }
 
-  #subtractYear(event) {
-    this.#yearSelector.value = Number(this.#yearSelector.value) - 1;
-    this.#refillMonth(event);
-  }
-
-  #addYear(event) {
-    this.#yearSelector.value = Number(this.#yearSelector.value) + 1;
-    this.#refillMonth(event);
-  }
-
-  #refillMonth(event) {
-    let monthIndex = this.#maxMonth;
-    let prevVal = this.#monthSelector.getValue();
-
-    if (this.#yearSelector.value == this.#yearSelector.max) {
-      let months = Constants.monthNames.filter((value, i) => i <= monthIndex);
-      this.#monthSelector.addOptions(months);
-    } else {
-      this.#monthSelector.addOptions(Constants.monthNames);
+  #setDate(date) {
+    this.#currDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+    this.#monthSelector.setValue(Constants.monthNames[date.getMonth()]);
+    this.#daySelector.setValue(date.getDate());
+    this.#yearSelector.setValue(date.getFullYear());
+    if (this.#assertDateBounds()) {
+      this.#enableAndDisableSelectors();
+      this.dispatchEvent(new Event("change", { bubbles: true }));
     }
-    //Hard code for now, i dont have data for april
-    //Move to somewhere in the if blocks
+  }
 
-    if (
-      prevVal == "" ||
-      (Number(Constants.MONTHMAP[prevVal]) - 1 > monthIndex &&
-        this.#yearSelector.value == this.#yearSelector.max)
-    ) {
-      this.#monthSelector.setValue(Constants.monthNames[monthIndex]);
-    } else if (event.type == Constants.LOOP_BEGIN_END_EVENT) {
-      this.#monthSelector.setValue(
-        Constants.monthNames[Constants.monthNames.length - 1]
-      );
-    } else {
-      this.#monthSelector.setValue(prevVal);
+  #assertDateBounds() {
+    if (this.#isOverMaxDate()) {
+      this.#setDate(this.#maxDate);
+      return false;
+    } else if (this.#isUnderMinDate()) {
+      this.#setDate(this.#minDate);
+      return false;
     }
 
-    //Check if we hit the rightmost month of the current year
-    //Dont allow any further movement right
-    //Same idea with left
-    this.#enableAndDisableSelectors();
+    return true;
+  }
+
+  addMonth() {
+    let currDay = this.#currDate.getDate();
+    this.#currDate.setMonth(this.#currDate.getMonth() + 1);
+    this.#currDate.setDate(
+      currDay != this.#currDate.getDate()
+        ? new Date(
+            this.#currDate.getFullYear(),
+            this.#currDate.getMonth(),
+            0
+          ).getDate()
+        : currDay
+    );
+    console.log(this.#currDate);
+    this.#setDate(this.#currDate);
+  }
+
+  subtractMonth() {
+    let currDay = this.#currDate.getDate();
+    this.#currDate.setMonth(this.#currDate.getMonth() - 1);
+    this.#currDate.setDate(
+      currDay != this.#currDate.getDate()
+        ? new Date(
+            this.#currDate.getFullYear(),
+            this.#currDate.getMonth(),
+            0
+          ).getDate()
+        : currDay
+    );
+    this.#setDate(this.#currDate);
+  }
+
+  addYear() {
+    let currDay = this.#currDate.getDate();
+    this.#currDate.setFullYear(this.#currDate.getFullYear() + 1);
+    this.#currDate.setDate(
+      currDay != this.#currDate.getDate()
+        ? new Date(
+            this.#currDate.getFullYear(),
+            this.#currDate.getMonth(),
+            0
+          ).getDate()
+        : currDay
+    );
+    this.#setDate(this.#currDate);
+  }
+
+  subtractYear() {
+    let currDay = this.#currDate.getDate();
+    this.#currDate.setFullYear(this.#currDate.getFullYear() - 1);
+    this.#currDate.setDate(
+      currDay != this.#currDate.getDate()
+        ? new Date(
+            this.#currDate.getFullYear(),
+            this.#currDate.getMonth(),
+            0
+          ).getDate()
+        : currDay
+    );
+    this.#setDate(this.#currDate);
+  }
+
+  addDay() {
+    this.#currDate.setDate(this.#currDate.getDate() + 1);
+    this.#setDate(this.#currDate);
+  }
+
+  subtractDay() {
+    this.#currDate.setDate(this.#currDate.getDate() - 1);
+    this.#setDate(this.#currDate);
   }
 
   //Check if we hit the rightmost month of the current year
   //Dont allow any further movement right
   #enableAndDisableSelectors() {
-    if (
-      this.#monthSelector.size - 1 == this.#monthSelector.getIndex() &&
-      this.#yearSelector.value == this.#maxYear
-    ) {
-      this.#monthSelector.disableRight();
-    } else {
-      this.#monthSelector.enableRight();
-    }
+    this.#currDate.setHours(0, 0, 0, 0);
+    this.#maxDate.setHours(0, 0, 0, 0);
+    this.#minDate.setHours(0, 0, 0, 0);
 
-    if (
-      this.#monthSelector.getIndex() == this.#minMonth &&
-      this.#yearSelector.value == this.#yearSelector.min
-    ) {
-      this.#monthSelector.disableLeft();
+    this.#enableDisableForwards();
+    this.#enableDisableBackwards();
+  }
+
+  #enableDisableForwards() {
+    let possibleDate = new Date(this.#currDate.getTime());
+    possibleDate.setFullYear(this.#currDate.getFullYear() + 1);
+    if (this.#isOverMaxDate(possibleDate)) {
+      this.#yearSelector.disableForward();
     } else {
-      this.#monthSelector.enableLeft();
+      this.#yearSelector.enableForward();
+    }
+    possibleDate = new Date(this.#currDate.getTime());
+    possibleDate.setMonth(this.#currDate.getMonth() + 1);
+    if (this.#isOverMaxDate(possibleDate)) {
+      this.#monthSelector.disableForward();
+    } else {
+      this.#monthSelector.enableForward();
+    }
+    possibleDate = new Date(this.#currDate.getTime());
+    possibleDate.setDate(this.#currDate.getDate() + 1);
+    if (this.#isOverMaxDate(possibleDate)) {
+      this.#daySelector.disableForward();
+    } else {
+      this.#daySelector.enableForward();
     }
   }
 
-  setMaxDate(month, year) {
-    this.#maxMonth = month;
-    this.#maxYear = year;
-    this.#yearSelector.max = year;
-    if (this.#isOverMaxDate()) {
-      this.#monthSelector.setValue(Constants.monthNames[month]);
-      this.#yearSelector.value = this.#yearSelector.max;
+  #enableDisableBackwards() {
+    let possibleDate = new Date(this.#currDate.getTime());
+    possibleDate.setFullYear(this.#currDate.getFullYear() - 1);
+    if (this.#isUnderMinDate(possibleDate)) {
+      this.#yearSelector.disableBackward();
+    } else {
+      this.#yearSelector.enableBackward();
     }
-    this.#yearSelector.dispatchEvent(new Event("change"));
+    possibleDate = new Date(this.#currDate.getTime());
+    possibleDate.setMonth(this.#currDate.getMonth() - 1);
+    if (this.#isUnderMinDate(possibleDate)) {
+      this.#monthSelector.disableBackward();
+    } else {
+      this.#monthSelector.enableBackward();
+    }
+    possibleDate = new Date(this.#currDate.getTime());
+    possibleDate.setDate(this.#currDate.getDate() - 1);
+    if (this.#isUnderMinDate(possibleDate)) {
+      this.#daySelector.disableBackward();
+    } else {
+      this.#daySelector.enableBackward();
+    }
   }
 
-  #isOverMaxDate() {
-    if (
-      (this.#monthSelector.getIndex() > this.#maxMonth &&
-        this.#yearSelector.value == this.#maxYear) ||
-      this.#yearSelector.value > this.#maxYear
-    ) {
+  setMaxDate(date) {
+    this.#maxDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+    this.#assertDateBounds();
+    this.#enableAndDisableSelectors();
+  }
+
+  #isOverMaxDate(date = this.#currDate) {
+    if (date > this.#maxDate) {
       return true;
     }
 
     return false;
   }
 
-  setMinDate(month, year) {
-    this.#minMonth = month;
-    this.#minYear = year;
-    this.#yearSelector.min = year;
-    if (this.#isUnderMinDate()) {
-      this.#monthSelector.setValue(Constants.monthNames[month]);
-      this.#yearSelector.value = this.#yearSelector.min;
-    }
-    this.#yearSelector.dispatchEvent(new Event("change"));
+  setMinDate(date) {
+    this.#minDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+    this.#assertDateBounds();
+    this.#enableAndDisableSelectors();
   }
 
-  #isUnderMinDate() {
-    if (
-      (this.#monthSelector.getIndex() < this.#minMonth &&
-        this.#yearSelector.value == this.#minYear) ||
-      this.#yearSelector.value < this.#minYear
-    ) {
+  #isUnderMinDate(date = this.#currDate) {
+    if (date < this.#minDate) {
       return true;
     }
 
@@ -200,6 +297,26 @@ class DateCustom extends HTMLElement {
 
   getMonthIndex() {
     return this.#monthSelector.getIndex();
+  }
+
+  getDay() {
+    return Number(this.#daySelector.getValue());
+  }
+
+  getDate() {
+    return new Date(
+      this.#currDate.getFullYear(),
+      this.#currDate.getMonth(),
+      this.#currDate.getDate()
+    );
+  }
+
+  static convertToDayString(day) {
+    if (day < 10) {
+      return "0" + String(day);
+    }
+
+    return String(day);
   }
 }
 

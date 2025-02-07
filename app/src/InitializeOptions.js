@@ -19,85 +19,35 @@ function main() {
     optionnight.innerHTML = "night";
     x.appendChild(optionnight);
   });
-
-  document.querySelectorAll(Constants.SELECTORS.BORDERS).forEach((x) => {
-    let optionCountry = document.createElement("option");
-    optionCountry.innerHTML = "Country";
-    x.appendChild(optionCountry);
-    let optionState = document.createElement("option");
-    optionState.innerHTML = "State";
-    x.appendChild(optionState);
-  });
-
   //Add anomaly options
-  document
-    .querySelectorAll(Constants.SELECTORS.PRODUCT_LAYER_TYPE)
-    .forEach((x) => {
-      Object.values(Constants.ANOMALYMAPPING).forEach(
-        ({ name, satellites }) => {
-          let option = document.createElement("option");
-          option.innerHTML = name;
-          x.appendChild(option);
-        }
-      );
-      x.addEventListener("change", displayDayNight);
-      x.addEventListener("change", displaySat);
-      x.addEventListener("change", displayBorderOptions);
-      x.addEventListener("change", displayBarPlotOption);
-      let event = new Event("change");
-      x.dispatchEvent(event);
+  document.querySelectorAll(Constants.SELECTORS.PRODUCT_LAYER).forEach((x) => {
+    Object.values(Constants.MAPPING).forEach(({ name, satellites }) => {
+      let option = document.createElement("option");
+      option.innerHTML = name;
+      x.appendChild(option);
     });
+    x.addEventListener("change", displayDayNight);
+    x.addEventListener("change", displaySat);
+    let event = new Event("change");
+    x.dispatchEvent(event);
+  });
   document.querySelector(Constants.SELECTORS.ENABLE_ANIMATE).checked = false;
   document.querySelectorAll(Constants.SELECTORS.VISIBLE).forEach((x) => {
     x.checked = false;
   });
 }
 
-function displayBarPlotOption(event) {
-  let anomalyObj = event.target;
-  let parentNode = anomalyObj.parentNode;
-  let barPlotOpt = parentNode.querySelector(Constants.SELECTORS.BAR_PLOT);
-  if (anomalyObj.value === Constants.ANOMALYMAPPING.BORDERS.name) {
-    barPlotOpt.style.display = "block";
-  } else {
-    barPlotOpt.style.display = "none";
-  }
-}
-
-function displayBorderOptions(event) {
-  let anomalyObj = event.target;
-  let parentNode = anomalyObj.parentNode;
-  let borderObj = parentNode.querySelector(Constants.SELECTORS.BORDERS);
-  if (hasBorderOptions(anomalyObj.value)) {
-    borderObj.style.display = "block";
-  } else {
-    borderObj.style.display = "none";
-  }
-}
-
-function hasBorderOptions(value) {
-  let { hasBorderOption } = Object.values(Constants.ANOMALYMAPPING).find(
-    ({ name }) => {
-      return name === value;
-    }
-  );
-
-  return hasBorderOption;
-}
-
 function displaySat(event) {
   let anomalyObj = event.target;
   let parentNode = anomalyObj.parentNode;
   let satelliteObj = parentNode.querySelector(Constants.SELECTORS.SATELLITE);
-  let { satellites } = Object.values(Constants.ANOMALYMAPPING).find(
-    ({ name }) => {
-      return name === anomalyObj.value;
-    }
-  );
+  let { satellites } = Object.values(Constants.MAPPING).find(({ name }) => {
+    return name === anomalyObj.value;
+  });
   satelliteObj.innerHTML = "";
-  satellites.forEach((satellite) => {
+  satellites.forEach(({ display_name, var_name }) => {
     let element = document.createElement("option");
-    element.innerHTML = satellite;
+    element.innerHTML = display_name;
     satelliteObj.appendChild(element);
   });
   if (satellites.length === 1) {
@@ -119,11 +69,9 @@ function displayDayNight(event) {
 }
 
 function hasDayNightFeature(value) {
-  let { hasDayNight } = Object.values(Constants.ANOMALYMAPPING).find(
-    ({ name }) => {
-      return name === value;
-    }
-  );
+  let { hasDayNight } = Object.values(Constants.MAPPING).find(({ name }) => {
+    return name === value;
+  });
   if (hasDayNight) {
     return true;
   }
