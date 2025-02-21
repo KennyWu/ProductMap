@@ -41,8 +41,6 @@ let newAttribution = new Attribution({
   collapsible: false,
   collapsed: false,
 });
-let intervalID = 0;
-let animateIndex = 1;
 
 function main() {
   map = new Map({

@@ -1,14 +1,10 @@
 export const IMAGE_TEMPLATE_URL =
-  "https://www.star.nesdis.noaa.gov/smcd/emb/land/__products/products/{yyyy}{mm}{dd}/{yyyy}{mm}{dd}_{satellite}_{variable}_{day[night]}.{fileformat}";
+  "https://www.star.nesdis.noaa.gov/smcd/emb/land/__products/monitoring/{yyyy}/{mm}/{dd}/{yyyy}{mm}{dd}_{satellite}_VIIRS_{variable}_{variable}_{day[night]}.{fileformat}";
 
 export const LEGEND_TEMPLATE_URL =
   "./legend/legend_{variable}_{day[night]}.png";
-export const PRODUCT_LAYERS_ID_MAPPING = { "#pl-1": 1, "#pl-2": 2, "#pl-3": 3 };
-export const ANIMATE_PRODUCT_LAYER_ENABLE = [
-  "#animatepl-1",
-  "#animatepl-2",
-  "#animatepl-3",
-];
+export const PRODUCT_LAYERS_ID_MAPPING = { "#pl-1": 1 };
+export const ANIMATE_PRODUCT_LAYER_ENABLE = ["#animatepl-1"];
 export const SELECTORS = {
   DAY_NIGHT: ".day-night-selector",
   OPACITY: ".opacity",
@@ -18,8 +14,6 @@ export const SELECTORS = {
   SATELLITE: ".satellite",
   CONTINENTS: "#continents",
   PRODUCT_LAYER_ONE: "#pl-1",
-  PRODUCT_LAYER_TWO: "#pl-2",
-  PRODUCT_LAYER_THREE: "#pl-3",
   ENABLE_ANIMATE: "#animate",
   ANIMATE_SPEED: "#animate-speed",
   ANIMATE_FROM: "#from-date",
@@ -174,6 +168,7 @@ function fillConstants(variable, name, satellites, hasDayNight) {
   };
 }
 
+export const URLPARAMETER = "product";
 export const MIN_YEAR_LOOKBACK = 2022;
 const CURRENT_YEAR = Number(new Date().getFullYear());
 let year_range = [];

@@ -18,9 +18,24 @@ class SelectCustom extends HTMLElement {
     if (mode === "left-right") {
       this.innerHTML = `
         <style>
-            btn-select {
-                font-size: 14px;
+             @media (min-width: 320px) {
+              .btn-select {
+                font-size: 0.6rem;
+              }
             }
+
+            @media (min-width: 768px) {
+              .btn-select {
+                font-size: 0.6rem;
+              }
+            }
+
+            @media (min-width: 992px) {
+              .btn-select {
+                font-size: 0.8rem;
+              }
+            }
+
             .btn-month {
                 background-color: whitesmoke;
             }
@@ -41,9 +56,28 @@ class SelectCustom extends HTMLElement {
     if (mode === "top-down") {
       this.innerHTML = `
         <style>
-            btn-select {
-                font-size: 14px;
+            @media (min-width: 320px) {
+              .btn-select {
+                font-size: 0.6rem;
+              }
+      
             }
+
+            @media (min-width: 768px) {
+              .btn-select {
+                font-size: 0.6rem;
+              }
+             
+            }
+
+            @media (min-width: 992px) {
+              .btn-select {
+                font-size: 0.8rem;
+              }
+        
+            }
+
+          
             custom-selector button {
               all: initial;
               transition: border-color 0.3s ease;
@@ -75,7 +109,7 @@ class SelectCustom extends HTMLElement {
               display: flex;
               justify-content: center;
               padding: 0px 0px 0px 0px;
-              margin: 1px
+              margin: 1px;
             }
         </style>
         <table>

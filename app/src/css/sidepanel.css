@@ -11,7 +11,7 @@
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
     U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 } */
-
+/* 
 .header {
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   display: flex;
@@ -126,18 +126,12 @@ button:hover {
   background-color: aqua;
 }
 
-.form-range {
-  margin-left: 0rem;
-  width: 100%;
-}
 
 .layer-options {
   padding: 1rem 1rem 1rem 1rem;
 }
 
-.form-range::-moz-range-track {
-  background-color: gray;
-}
+
 
 .show {
   display: flex;
@@ -201,4 +195,86 @@ input[type="checkbox"] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+} */
+
+.title {
+  font-size: 1.5rem; /* Default font size */
+}
+
+.side-panel-size {
+  width: 20%;
+}
+
+@media (min-width: 320px) {
+  .title {
+    font-size: 0.7rem;
+  }
+  .side-panel-size {
+    width: 120%;
+  }
+  .text {
+    font-size: 0.8rem;
+  }
+
+  .product-layer select {
+    font-size: 0.7rem;
+  }
+
+  .product-layer select option {
+    font-size: 0.7rem;
+  }
+}
+
+/* Increase font size for medium screens */
+@media (min-width: 768px) {
+  .title {
+    font-size: 0.9rem;
+  }
+  .side-panel-size {
+    width: 35%;
+  }
+
+  .text {
+    font-size: 0.9rem;
+  }
+
+  .product-layer select {
+    font-size: 0.8rem;
+  }
+
+  .product-layer select option {
+    font-size: 0.8rem;
+  }
+}
+
+/* Further increase font size for large screens */
+@media (min-width: 992px) {
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .side-panel-size {
+    width: 20%;
+  }
+
+  .text {
+    font-size: 1rem;
+  }
+
+  .product-layer select {
+    font-size: 0.8rem;
+  }
+
+  .product-layer select option {
+    font-size: 0.8rem;
+  }
+}
+
+.form-range {
+  margin-left: 0rem;
+  width: 100%;
+}
+
+.form-range::-moz-range-track {
+  background-color: gray;
 }

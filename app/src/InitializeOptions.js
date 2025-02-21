@@ -7,6 +7,9 @@ let currMonth = date.getMonth();
 let currYear = date.getFullYear();
 
 function main() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
   let continents = document.querySelector("#continents");
   continents.addOptions(Constants.CONTINENTS);
 
@@ -22,9 +25,15 @@ function main() {
   //Add anomaly options
   document.querySelectorAll(Constants.SELECTORS.PRODUCT_LAYER).forEach((x) => {
     Object.values(Constants.MAPPING).forEach(({ name, satellites }) => {
-      let option = document.createElement("option");
-      option.innerHTML = name;
-      x.appendChild(option);
+      if (
+        (urlParams.has(Constants.URLPARAMETER) &&
+          name === urlParams.get(Constants.URLPARAMETER)) ||
+        !urlParams.has(Constants.URLPARAMETER)
+      ) {
+        let option = document.createElement("option");
+        option.innerHTML = name;
+        x.appendChild(option);
+      }
     });
     x.addEventListener("change", displayDayNight);
     x.addEventListener("change", displaySat);
