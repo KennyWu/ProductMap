@@ -117,7 +117,6 @@ class AnimationService {
     this.#updateVisbility();
     this.#intervalID = setInterval(
       function () {
-        console.log(this.#mapLayers.getArray()[4].getSource().url_);
         this.#dateIndex =
           this.#dateIndex + 1 == this.#allDates.length
             ? 0
