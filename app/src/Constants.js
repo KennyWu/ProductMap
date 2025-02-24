@@ -1,5 +1,5 @@
 export const IMAGE_TEMPLATE_URL =
-  "https://www.star.nesdis.noaa.gov/smcd/emb/land/__products/monitoring/{yyyy}/{mm}/{dd}/{yyyy}{mm}{dd}_{satellite}_VIIRS_{variable}_{variable}_{day[night]}.{fileformat}";
+  "https://www.star.nesdis.noaa.gov/smcd/emb/land/__products/monitoring/{yyyy}/{mm}/{dd}/{yyyy}{mm}{dd}_{satellite}_VIIRS_{variable}_{day[night]}.{fileformat}";
 
 export const LEGEND_TEMPLATE_URL =
   "./legend/legend_{variable}_{day[night]}.png";
