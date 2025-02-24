@@ -120,22 +120,30 @@ export const monthNames = [
   "Dec",
 ];
 
-export const CONTINENTS = ["Global", "AF", "AS", "EU", "NA", "OC", "SA"];
+export const CONTINENTS = [
+  "Global",
+  "Africa",
+  "Asia",
+  "Europe",
+  "N_America",
+  "Oceania",
+  "S_America",
+];
 
 export const CONTINENT_VIEWS = {
   Global: {
     center: [0, 0],
     zoom: 2,
   },
-  NA: {
+  N_America: {
     center: [-94.17006657178112, 44.140217956349986],
     zoom: 3.3584629689815606,
   },
-  SA: {
+  S_America: {
     center: [-57.33868773101648, -21.095320348067848],
     zoom: 3.856796302314895,
   },
-  AF: {
+  Africa: {
     center: [28.70623446400729, 0.20404521197346392],
     zoom: 3.7534629689815597,
   },
@@ -143,15 +151,15 @@ export const CONTINENT_VIEWS = {
   //   center: [3.614104403963678, -8.920360151165461],
   //   zoom: 2.4084629689815586,
   // },
-  EU: {
+  Europe: {
     center: [12.625158068975857, 53.316551892077825],
     zoom: 4.473462968981556,
   },
-  AS: {
+  Asia: {
     center: [91.2482594184713, 50.1690698507913],
     zoom: 3.490129635648221,
   },
-  OC: {
+  Oceania: {
     center: [115.85804397460218, -12.292736955229955],
     zoom: 3.7067963023148898,
   },
