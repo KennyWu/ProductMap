@@ -23,26 +23,37 @@ function main() {
     x.appendChild(optionnight);
   });
   //Add anomaly options
+  document
+    .querySelectorAll(Constants.SELECTORS.PRODUCT_LAYER_TYPE)
+    .forEach((x) => {
+      Object.values(Constants.MAPPING).forEach(({ name, satellites }) => {
+        if (
+          (urlParams.has(Constants.URLPARAMETER) &&
+            name === urlParams.get(Constants.URLPARAMETER)) ||
+          !urlParams.has(Constants.URLPARAMETER)
+        ) {
+          let option = document.createElement("option");
+          option.innerHTML = name;
+          x.appendChild(option);
+        }
+      });
+      x.addEventListener("change", displayDayNight);
+      x.addEventListener("change", displaySat);
+      let event = new Event("change");
+      x.dispatchEvent(event);
+    });
+  document.querySelector(Constants.SELECTORS.ENABLE_ANIMATE).checked = false;
   document.querySelectorAll(Constants.SELECTORS.PRODUCT_LAYER).forEach((x) => {
-    Object.values(Constants.MAPPING).forEach(({ name, satellites }) => {
-      if (
-        (urlParams.has(Constants.URLPARAMETER) &&
-          name === urlParams.get(Constants.URLPARAMETER)) ||
-        !urlParams.has(Constants.URLPARAMETER)
-      ) {
-        let option = document.createElement("option");
-        option.innerHTML = name;
-        x.appendChild(option);
+    const visible = x.querySelector(Constants.SELECTORS.VISIBLE);
+    const selectedEle = x.querySelector(Constants.SELECTORS.PRODUCT_LAYER_TYPE);
+    Constants.DEFAULT_OPTION_PRODUCT.forEach(({ id, layer, show }) => {
+      if (id.slice(1) === x.id) {
+        visible.checked = show;
+        selectedEle.value = layer;
+        let event = new Event("change");
+        x.dispatchEvent(event);
       }
     });
-    x.addEventListener("change", displayDayNight);
-    x.addEventListener("change", displaySat);
-    let event = new Event("change");
-    x.dispatchEvent(event);
-  });
-  document.querySelector(Constants.SELECTORS.ENABLE_ANIMATE).checked = false;
-  document.querySelectorAll(Constants.SELECTORS.VISIBLE).forEach((x) => {
-    x.checked = false;
   });
 }
 

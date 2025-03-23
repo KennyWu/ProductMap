@@ -84,7 +84,7 @@ export function registerLayerHandlers(layers, startIndex, enableVisible) {
 export function regLayerChanges(map) {
   Object.keys(Constants.PRODUCT_LAYERS_ID_MAPPING).forEach((id, i) => {
     let productType = document.querySelector(
-      id + " " + Constants.SELECTORS.PRODUCT_LAYER
+      id + " " + Constants.SELECTORS.PRODUCT_LAYER_TYPE
     );
     let dayNight = document.querySelector(
       id + " " + Constants.SELECTORS.DAY_NIGHT
@@ -139,7 +139,7 @@ export function loadLayers(pl, date = null, regEnable = true) {
   Object.values(Constants.SELECTORS).forEach((selector) => {
     if (
       selector === Constants.SELECTORS.OPACITY ||
-      selector === Constants.SELECTORS.PRODUCT_LAYER ||
+      selector === Constants.SELECTORS.PRODUCT_LAYER_TYPE ||
       selector === Constants.SELECTORS.VISIBLE ||
       selector === Constants.SELECTORS.DAY_NIGHT ||
       selector === Constants.SELECTORS.SATELLITE
@@ -213,13 +213,13 @@ function getElementValues(plElements) {
     Number(plElements[Constants.SELECTORS.OPACITY].value) /
     Number(plElements[Constants.SELECTORS.OPACITY].max);
   let visible = plElements[Constants.SELECTORS.VISIBLE].checked;
-  let dataType = plElements[Constants.SELECTORS.PRODUCT_LAYER].value.includes(
-    "Borders"
-  )
+  let dataType = plElements[
+    Constants.SELECTORS.PRODUCT_LAYER_TYPE
+  ].value.includes("Borders")
     ? Constants.DATATYPE.BORDERS
     : Constants.DATATYPE.IMAGE;
   let { variable } = Object.values(Constants.MAPPING).find(({ name }) => {
-    return plElements[Constants.SELECTORS.PRODUCT_LAYER].value === name;
+    return plElements[Constants.SELECTORS.PRODUCT_LAYER_TYPE].value === name;
   });
   let yyyymmdd = yyyy + mm + dd;
   let fileformat =
