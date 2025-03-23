@@ -8,7 +8,8 @@ export const ANIMATE_PRODUCT_LAYER_ENABLE = ["#animatepl-1"];
 export const SELECTORS = {
   DAY_NIGHT: ".day-night-selector",
   OPACITY: ".opacity",
-  PRODUCT_LAYER: ".product-layer-type",
+  PRODUCT_LAYER_TYPE: ".product-layer-type",
+  PRODUCT_LAYER: ".product-layer",
   VISIBLE: ".visible",
   DATE: "#date",
   SATELLITE: ".satellite",
@@ -167,6 +168,14 @@ function fillConstants(variable, name, satellites, hasDayNight) {
     hasDayNight: hasDayNight,
   };
 }
+
+export const DEFAULT_OPTION_PRODUCT = [
+  {
+    id: SELECTORS.PRODUCT_LAYER_ONE,
+    layer: MAPPING.LST.name,
+    show: true,
+  },
+];
 
 export const URLPARAMETER = "product";
 export const MIN_YEAR_LOOKBACK = 2022;

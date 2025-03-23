@@ -14,6 +14,8 @@ import * as ProductLayers from "./ProductLayers.js";
 import { createXYDirString, fillStringTemplate } from "./util.js";
 import { initAnimationService } from "./Animation.js";
 import OLCesium from "olcs";
+import { ImageStatic } from "ol/source.js";
+import ImageLayer from "ol/layer/Image.js";
 
 const currProj = "ESPG:4326";
 const extent = [-180, -125, 180, 125];
@@ -50,12 +52,20 @@ function main() {
     view: view,
   });
   map.setLayers(ProductLayers.initLayers());
-  const ol3d = new OLCesium({ map: map });
+  const ol3d = new OLCesium({ map: map, target: "map" });
   ProductLayers.regLayerChanges(map);
   changeContinentSelectMode();
   registerMapHandlers();
   registerViewHandlers(map, ol3d);
   initAnimationService(map);
+  let layer = new ImageLayer({
+    source: new ImageStatic({
+      url: "/test3.png",
+      projection: currProj,
+      imageExtent: [-180, -90, 180, 90],
+    }),
+  });
+  map.addLayer(layer);
 }
 
 function init_controls() {
