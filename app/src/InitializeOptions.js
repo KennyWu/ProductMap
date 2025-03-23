@@ -51,7 +51,7 @@ function main() {
         visible.checked = show;
         selectedEle.value = layer;
         let event = new Event("change");
-        x.dispatchEvent(event);
+        selectedEle.dispatchEvent(event);
       }
     });
   });

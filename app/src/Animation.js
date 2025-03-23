@@ -11,7 +11,7 @@ import { Control, defaults as defaultControls } from "ol/control.js";
 import DateCustom from "./CustomComponents/DateCustom.js";
 
 class AnimationService {
-  static #ANIMATION_MAP_LAYER = 2;
+  static #ANIMATION_MAP_LAYER = Constants.NUM_PRODUCT_LAYERS + 1;
   static #DATETEMPLATE =
     " <div class='ani-date-display'> Now Showing {date} </div>";
   #mapLayers;

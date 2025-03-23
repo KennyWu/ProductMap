@@ -19,10 +19,11 @@
           </div>
           <div class="col text-center pt-2">
             <h1 class="title text-light" id="title-name">Land Product Mapper</h1>
-  <a href="https://www.star.nesdis.noaa.gov/smcd/emb/land/index.php" class="text-warning fw-bold" style="display:block; font-size:16px; margin-top:5px; text-decoration: underline;">
-    Back to Home
-  </a>
-	  </div>
+            <a href="https://www.star.nesdis.noaa.gov/smcd/emb/land/index.php" class="text-warning fw-bold"
+              style="display:block; font-size:16px; margin-top:5px; text-decoration: underline;">
+              Back to Home
+            </a>
+          </div>
         </div>
 
 
@@ -63,6 +64,7 @@
                 </div>
                 <div class="animation-settings" id="animation-product-layer">
                   <Label class="text">Animate Layer 1: <input type="checkbox" id="animatepl-1"></Label>
+                  <Label class="text">Animate Layer 2: <input type="checkbox" id="animatepl-2"></Label>
                 </div>
               </div>
             </div>
@@ -82,6 +84,34 @@
             </div>
 
             <div class="collapse" id="collapisble-layer-1">
+              <div class="layer-options">
+                <select class="form-control form-control-sm product-layer-type"></select>
+                <div class="pl-dropdown">
+                  <select class="form-control form-control-sm satellite"></select>
+                  <select class="form-control form-control-sm day-night-selector"></select>
+                </div>
+                <label class="text">
+                  Opacity
+                  <input type="range" class="form-range opacity" value="100" min="0" max="100" step="1" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="product-layer container-sm border border-dark rounded-1 m-1 mt-4 p-3 shadow"
+            style="background-color: #55bce6;" id="pl-2">
+            <div class="container d-flex justify-content-between">
+              <button class="btn btn-collapse p-0 pd-0 title" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapisble-layer-2" style="border: none;" onmouseover="this.style.color='white'"
+                onmouseout="this.style.color='black'">
+                <h5 class="title">+ Layer 2</h5>
+              </button>
+              <label class="show d-flex gap-1 align-items-center">
+                <h5 class="title">Show</h5>
+                <input type="checkbox" class="visible m-0" />
+              </label>
+            </div>
+
+            <div class="collapse" id="collapisble-layer-2">
               <div class="layer-options">
                 <select class="form-control form-control-sm product-layer-type"></select>
                 <div class="pl-dropdown">

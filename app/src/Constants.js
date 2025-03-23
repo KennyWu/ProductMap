@@ -3,8 +3,9 @@ export const IMAGE_TEMPLATE_URL =
 
 export const LEGEND_TEMPLATE_URL =
   "./legend/legend_{variable}_{day[night]}.png";
-export const PRODUCT_LAYERS_ID_MAPPING = { "#pl-1": 1 };
-export const ANIMATE_PRODUCT_LAYER_ENABLE = ["#animatepl-1"];
+export const PRODUCT_LAYERS_ID_MAPPING = { "#pl-1": 1, "#pl-2": 2 };
+export const NUM_PRODUCT_LAYERS = Object.keys(PRODUCT_LAYERS_ID_MAPPING).length;
+export const ANIMATE_PRODUCT_LAYER_ENABLE = ["#animatepl-1", "#animatepl-2"];
 export const SELECTORS = {
   DAY_NIGHT: ".day-night-selector",
   OPACITY: ".opacity",
@@ -15,6 +16,7 @@ export const SELECTORS = {
   SATELLITE: ".satellite",
   CONTINENTS: "#continents",
   PRODUCT_LAYER_ONE: "#pl-1",
+  PRODUCT_LAYER_TWO: "#pl-2",
   ENABLE_ANIMATE: "#animate",
   ANIMATE_SPEED: "#animate-speed",
   ANIMATE_FROM: "#from-date",
@@ -181,6 +183,11 @@ export const DEFAULT_OPTION_PRODUCT = [
   {
     id: SELECTORS.PRODUCT_LAYER_ONE,
     layer: MAPPING.LST.name,
+    show: true,
+  },
+  {
+    id: SELECTORS.PRODUCT_LAYER_TWO,
+    layer: MAPPING.LSA.name,
     show: true,
   },
 ];
