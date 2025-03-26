@@ -188,7 +188,7 @@ export const DEFAULT_OPTION_PRODUCT = [
   {
     id: SELECTORS.PRODUCT_LAYER_TWO,
     layer: MAPPING.LSA.name,
-    show: true,
+    show: false,
   },
 ];
 
