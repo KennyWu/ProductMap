@@ -9,6 +9,7 @@ import { Fill, Stroke, Style } from "ol/style.js";
 import { getLayersAtDate, registerLayerHandlers } from "./ProductLayers.js";
 import { Control, defaults as defaultControls } from "ol/control.js";
 import DateCustom from "./CustomComponents/DateCustom.js";
+import renderLayers from "./Layers.js";
 
 class AnimationService {
   static #ANIMATION_MAP_LAYER = Constants.NUM_PRODUCT_LAYERS + 1;
@@ -85,11 +86,11 @@ class AnimationService {
 
   #updateVisbility() {
     this.#aniProdLayers.forEach((ele, index) => {
-      this.#mapLayers
-        .getArray()
-        [AnimationService.#ANIMATION_MAP_LAYER + index].setVisible(
-          this.#enable.checked && ele.checked
-        );
+      renderLayers(
+        this.#mapLayers.getArray(),
+        AnimationService.#ANIMATION_MAP_LAYER + index,
+        this.#enable.checked && ele.checked
+      );
     });
   }
 

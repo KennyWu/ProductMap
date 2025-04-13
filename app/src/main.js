@@ -14,6 +14,8 @@ import * as ProductLayers from "./ProductLayers.js";
 import { createXYDirString, fillStringTemplate } from "./util.js";
 import { initAnimationService } from "./Animation.js";
 import OLCesium from "olcs";
+import { renderLegend } from "./Layers.js";
+import "./Draggable.js";
 
 const currProj = "ESPG:4326";
 const extent = [-180, -125, 180, 125];
@@ -38,6 +40,7 @@ const overlay = new Overlay({
 let map = null;
 
 let newAttribution = new Attribution({
+  className: "ol-attribution",
   collapsible: false,
   collapsed: false,
 });
@@ -50,6 +53,7 @@ function main() {
     view: view,
   });
   map.setLayers(ProductLayers.initLayers());
+  renderLegend(map.getLayers().getArray());
   const ol3d = new OLCesium({ map: map });
   ProductLayers.regLayerChanges(map);
   changeContinentSelectMode();
@@ -59,9 +63,7 @@ function main() {
 }
 
 function init_controls() {
-  let control = defaultControls();
-  control.pop();
-  control.push(newAttribution);
+  let control = defaultControls({ attribution: false });
   control.push(
     new FullScreen({
       source: document.getElementById("screen"),

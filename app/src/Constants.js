@@ -26,6 +26,7 @@ export const SELECTORS = {
   ANIMATION_CONFIGURE: "#animation-configure",
   ANIMATION_PRODUCT_LAYER: "#animation-product-layer",
   VIEW_3D: "#view-3d",
+  LEGEND: "#legend",
 };
 
 export const SATELLITE = {
@@ -33,7 +34,15 @@ export const SATELLITE = {
   JPSS1: { display_name: "NOAA-20", var_name: "JPSS1" },
   JPSS2: { display_name: "NOAA-21", var_name: "JPSS2" },
   SNPP: { display_name: "S-NPP", var_name: "SNPP" },
+  GOES16: { display_name: "GOES-16", var_name: "g16" },
+  GOES17: { display_name: "GOES-17", var_name: "g17" },
+  GOES18: { display_name: "GOES-18", var_name: "g18" },
+  GOES19: { display_name: "GOES-19", var_name: "g19" },
 };
+
+// export const EXTRA_OPTIONS {
+//   { display_name: "Blended", var_name: "JPSS" }
+// }
 
 export const MAPPING = {
   LST: fillConstants(
@@ -200,6 +209,10 @@ for (let i = MIN_YEAR_LOOKBACK; i <= CURRENT_YEAR; i++) {
   year_range.push(i);
 }
 export const VALID_YEARS_RANGE = year_range;
+export const VALID_HOUR_RANGE = Array.from(
+  { length: 24 },
+  (v, k) => `${String(k)}:00`
+);
 export const VALID_DAY_RANGE = Array.from({ length: 31 }, (v, k) => k + 1);
 export const FORWARD = "forward-change";
 export const BACKWARD = "backward-change";

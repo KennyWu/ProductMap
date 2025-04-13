@@ -13,7 +13,7 @@
     <div id="side-panel" class="container-sm bg-gradient side-panel-size shadow-lg"
       style="background-color: #10a6e1; overflow-y: auto; border-right: 1px solid #000;">
       <div>
-        <div id="heading" class="d-flex gap-2 pt-3 align-items-center">
+        <div id="heading" class="d-flex gap-1 pt-3 align-items-center">
           <div class="col-2 col-sm-0">
             <img id="logo" class="img-fluid" src="./logo/noaa.svg" alt="logo" />
           </div>
@@ -28,12 +28,12 @@
 
 
         <div id="content">
-          <div class="non-product-option container-sm border border-dark rounded-1 m-1 mt-4 p-2 shadow"
+          <div class="non-product-option container-sm border border-dark rounded-1 m-1 mt-2 p-2 shadow"
             style="background-color: #55bce6;">
             <h5 class="option-header title">Date</h5>
             <custom-date id="date" class="date-custom"></custom-date>
           </div>
-          <div class="non-product-option container-sm border border-dark rounded-1 m-1 mt-4 p-2 shadow"
+          <div class="non-product-option container-sm border border-dark rounded-1 m-1 mt-2 p-2 shadow"
             style="background-color: #55bce6;">
             <h5 class="option-header title">View</h5>
             <div id="view-container">
@@ -44,7 +44,7 @@
               </div>
             </div>
           </div>
-          <div class="non-product-option container-sm border border-dark rounded-1 m-1 mt-4 p-3 shadow"
+          <div class="non-product-option container-sm border border-dark rounded-1 m-1 mt-2 p-3 shadow"
             style="background-color: #55bce6;">
             <button class="btn btn-collapse p-0 pd-0" type="button" data-bs-toggle="collapse"
               data-bs-target="#animation-layer" style="border: none;" onmouseover="this.style.color='white'"
@@ -69,21 +69,21 @@
               </div>
             </div>
           </div>
-          <div class="product-layer container-sm border border-dark rounded-1 m-1 mt-4 p-3 shadow"
+          <div class="product-layer container-sm border border-dark rounded-1 m-1 mt-2 p-2 pt-3 pb-3 shadow"
             style="background-color: #55bce6;" id="pl-1">
             <div class="container d-flex justify-content-between">
               <button class="btn btn-collapse p-0 pd-0 title" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapisble-layer-1" style="border: none;" onmouseover="this.style.color='white'"
                 onmouseout="this.style.color='black'">
-                <h5 class="title">+ Layer 1</h5>
+                <h5 class="title m-0">Layer 1</h5>
               </button>
               <label class="show d-flex gap-1 align-items-center">
-                <h5 class="title">Show</h5>
+                <h5 class="title m-0">Show</h5>
                 <input type="checkbox" class="visible m-0" />
               </label>
             </div>
 
-            <div class="collapse" id="collapisble-layer-1">
+            <div class="collapse p-1" id="collapisble-layer-1">
               <div class="layer-options">
                 <select class="form-control form-control-sm product-layer-type"></select>
                 <div class="pl-dropdown">
@@ -97,21 +97,21 @@
               </div>
             </div>
           </div>
-          <div class="product-layer container-sm border border-dark rounded-1 m-1 mt-4 p-3 shadow"
+          <div class="product-layer container-sm border border-dark rounded-1 m-1 mt-2 p-2 pt-3 pb-3 shadow"
             style="background-color: #55bce6;" id="pl-2">
             <div class="container d-flex justify-content-between">
               <button class="btn btn-collapse p-0 pd-0 title" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapisble-layer-2" style="border: none;" onmouseover="this.style.color='white'"
                 onmouseout="this.style.color='black'">
-                <h5 class="title">+ Layer 2</h5>
+                <h5 class="title m-0">Layer 2</h5>
               </button>
               <label class="show d-flex gap-1 align-items-center">
-                <h5 class="title">Show</h5>
+                <h5 class="title m-0">Show</h5>
                 <input type="checkbox" class="visible m-0" />
               </label>
             </div>
 
-            <div class="collapse" id="collapisble-layer-2">
+            <div class="collapse p-1" id="collapisble-layer-2">
               <div class="layer-options">
                 <select class="form-control form-control-sm product-layer-type"></select>
                 <div class="pl-dropdown">
@@ -135,6 +135,7 @@
       <a href="#" id="popup-closer" class="ol-popup-closer"></a>
       <div id="popup-content"></div>
     </div>
+    <div id="legend" class="ol-attribution draggable"></div>
   </div>
   <script type="module" src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.113/Build/Cesium/Cesium.js"></script>
