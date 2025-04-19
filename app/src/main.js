@@ -132,6 +132,12 @@ function registerViewHandlers(map, ol3d) {
   document
     .querySelector(Constants.SELECTORS.VIEW_3D)
     .addEventListener("change", (event) => {
+      let view = map.getView();
+      if (event.target.checked && view.getZoom() < 2.7) {
+        view.setZoom(view.getZoom() * 1.6);
+      } else if (!event.target.checked) {
+        view.setZoom(view.getZoom() * (1 / 1.6));
+      }
       ol3d.setEnabled(event.target.checked);
     });
   const e = new Event("change");

@@ -205,6 +205,11 @@ input[type="checkbox"] {
   width: 20%;
 }
 
+select {
+  text-align: center;
+  text-align-last: center;
+}
+
 @media (min-width: 320px) {
   .title {
     font-size: 0.7rem;
