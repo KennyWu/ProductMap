@@ -87,6 +87,12 @@ export const MAPPING = {
     [SATELLITE.JPSS1, SATELLITE.JPSS2, SATELLITE.SNPP],
     false
   ),
+  LAI: fillConstants(
+    "LAI",
+    "LAI",
+    [SATELLITE.JPSS1, SATELLITE.JPSS2, SATELLITE.SNPP],
+    false
+  ),
 };
 
 export const DATATYPE = {
