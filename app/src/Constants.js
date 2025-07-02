@@ -59,7 +59,13 @@ export const MAPPING = {
   ),
   SR: fillConstants(
     "SR",
-    "SR",
+    "SR RGB",
+    [SATELLITE.JPSS1, SATELLITE.JPSS2, SATELLITE.SNPP],
+    false
+  ),
+  SR2: fillConstants(
+    "SR2",
+    "SR RGB land",
     [SATELLITE.JPSS1, SATELLITE.JPSS2, SATELLITE.SNPP],
     false
   ),
