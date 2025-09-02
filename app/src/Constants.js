@@ -57,6 +57,18 @@ export const MAPPING = {
     [SATELLITE.JPSS, SATELLITE.JPSS1, SATELLITE.JPSS2, SATELLITE.SNPP],
     false
   ),
+  BSA: fillConstants(
+    "BSA-shortwave",
+    "Black Sky Albedo",
+    [SATELLITE.JPSS],
+    false
+  ),
+  WSA: fillConstants(
+    "WSA-shortwave",
+    "White Sky Albedo",
+    [SATELLITE.JPSS],
+    false
+  ),
   SR: fillConstants(
     "SR",
     "SR RGB",
